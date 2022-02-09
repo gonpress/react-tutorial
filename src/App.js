@@ -34,31 +34,36 @@
 // 4. ,는 그리고로 해석
 // 5. {}
 
-
-import React from 'react';
-import products from './products';
+import React, {useState, useEffect} from 'react';
+import axios from "axios";
 
 const App = () => {
     // 변수, 상수, 함수, 상태 값 선언
+    const [posts, setPosts] = useState([]);
 
-    console.log("+++++++++++++++", products);
 
+    const getPosts = async () => {
+        try{
+            const {data} = await axios.get('https://jsonplaceholder.typicode.com/posts');
+            console.log("+++++++++++++++++", data);
+            setPosts(data);
+        } catch (e) {
+            console.log(e.message);
+        }
+    }
 
-  return (
+    useEffect(() => {
+        getPosts();
+    }, [])
+
+    return (
       // 화면에 보여지는 부분
       <div>
-          {
-              products.map(product => (
-                  <h1 key={product._id}>{product.name}</h1>
-              ))
-          }
-          {/*{products.map(product => {*/}
-          {/*    return (*/}
-          {/*        <h1>{product.name}</h1>*/}
-          {/*    )*/}
-          {/*})}*/}
+          {posts.map(post => (
+              <h1 key={post.id}>{post.title}</h1>
+          ))}
       </div>
-  );
+    );
 };
 
 export default App;
