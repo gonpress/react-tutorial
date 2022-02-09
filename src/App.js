@@ -27,25 +27,36 @@
 //
 // export default App;
 
+// 코드 빌드 순서
+// 1. 위에서 아래로
+// 2. '=' 를 기준으로 오른쪽에서 왼쪽으로 치환
+// 3. .은 하위 메소드를 호출
+// 4. ,는 그리고로 해석
+// 5. {}
+
+
 import React from 'react';
+import products from './products';
 
 const App = () => {
     // 변수, 상수, 함수, 상태 값 선언
 
-
-    const data = 'name';
-    const a = 5;
-    const b = 2;
-
-    const add = (a, b) => {
-        return a+b;
-    }
+    console.log("+++++++++++++++", products);
 
 
   return (
       // 화면에 보여지는 부분
       <div>
-        <h1>{add(a,b)}</h1>
+          {
+              products.map(product => (
+                  <h1 key={product._id}>{product.name}</h1>
+              ))
+          }
+          {/*{products.map(product => {*/}
+          {/*    return (*/}
+          {/*        <h1>{product.name}</h1>*/}
+          {/*    )*/}
+          {/*})}*/}
       </div>
   );
 };
