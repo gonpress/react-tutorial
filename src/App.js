@@ -34,34 +34,61 @@
 // 4. ,는 그리고로 해석
 // 5. {}
 
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
+// import useSWR from 'swr';
+//
 import axios from "axios";
+// const fetcher = (url) => fetch(url).then((res) => res.json());
+
 
 const App = () => {
     // 변수, 상수, 함수, 상태 값 선언
-    const [posts, setPosts] = useState([]);
+    // const {data, error} = useSWR(
+    //     'https://api.themoviedb.org/3/movie/now_playing?api_key=8597e491ed6e80f0de12e349eb60ea6e&language=en-US&page=1',
+    //     fetcher
+    // );
+    // if (error) return "An error has occurred.";
+    // if (!data) return "Loading...";
+    //
+    // console.log(data);
 
+    const [movies, setMovies] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
-    const getPosts = async () => {
+    const getMovies  = async () => {
         try{
-            const {data} = await axios.get('https://jsonplaceholder.typicode.com/posts');
-            console.log("+++++++++++++++++", data);
-            setPosts(data);
+            const {data} = await axios.get('https://api.themoviedb.org/3/movie/now_playing?api_key=8597e491ed6e80f0de12e349eb60ea6e&language=en-US&page=1');
+            console.log("+++++++++++++++++", data.results);
+            setMovies(data.results);
+            setIsLoading(false);
         } catch (e) {
             console.log(e.message);
+            setIsLoading(false);
         }
     }
 
     useEffect(() => {
-        getPosts();
+        getMovies();
     }, [])
 
     return (
       // 화면에 보여지는 부분
       <div>
-          {posts.map(post => (
-              <h1 key={post.id}>{post.title}</h1>
-          ))}
+          {isLoading ? (
+              <h1>로딩 중...</h1>
+          ) : (
+              <>
+                  {movies.map(movie => (
+                      <h1 key={movie.id}>{movie.title}</h1>
+                  ))}
+              </>
+          )}
+          {/*{data.results.map(result => (*/}
+          {/*    <h1>{result.title}</h1>*/}
+          {/*))}*/}
+          {/*{movies.map(movie => (*/}
+          {/*    <h1 key={movie.id}>{movie.title}</h1>*/}
+          {/*))}*/}
       </div>
     );
 };
